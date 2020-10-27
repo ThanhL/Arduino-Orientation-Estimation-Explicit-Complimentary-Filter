@@ -2,7 +2,7 @@
 
 **Explicit Complementary Filter implementation for Teensy/Arduino**
 
-This repository covers an attitude estimation system with the use of quaternions and Unscented Kalman Filters. This project using the LIS3MDL+LSM6DS33 sensor module that provides accelerometer, gyroscope and magnetometer data. The code can be uploaded to a Teensy/Arduino which does the Unscented Kalman Filter calculations onboard the microcontroller and prints the quaternion results to Serial.
+This repository covers an attitude estimation system with the use of quaternions and Explicit Complementary Filter. This project using the LIS3MDL+LSM6DS33 sensor module that provides accelerometer, gyroscope and magnetometer data. The code can be uploaded to a Teensy/Arduino which does the Explicit Complementary Filter calculations onboard the microcontroller and prints the quaternion results to Serial. This is an implementation of Peter Corke's Explicit Complimentary Filter for Orientation Estimation algorithm (in Robotics Vision and Control, p87-p89).
 
 To visualize the quaternion, a Processing sketch was developed (OrientationVisualization.pde located in the Processing folder). The sketch reads the quaternion data from USB serial outputted by the Teensy/Arduino and then applies the rotation onto an object for visualization as shown:
 
@@ -14,9 +14,9 @@ To visualize the quaternion, a Processing sketch was developed (OrientationVisua
 ### Hardware Requirements
 The following code was tested/developed with the following hardware:
 
-`Adafruit LIS3MDL+LSM6DS33 8 DoF sensor module`: This IMU module provides us with accelerometer, gyroscope and magnetometer data. These motion data are fed into the Unscented Kalman Filter and fused together to estimate the orientation. The sensor can be purchased here: https://www.adafruit.com/product/4485
+`Adafruit LIS3MDL+LSM6DS33 8 DoF sensor module`: This IMU module provides us with accelerometer, gyroscope and magnetometer data. These motion data are fed into the Explicit Complementary Filter and fused together to estimate the orientation. The sensor can be purchased here: https://www.adafruit.com/product/4485
 
-`Teensy 4.0`:  The Unscented Kalman Filter code is uploaded onto this microcontroller. The Teensy 4.0 was used to take advantage of 32 bit ARM Cortex-M7, which provides a significantly faster/more powerful processor than the Arduino microcontrollers. This allowed for fast matrix math when using Eigen without having to worry about the 8-bit constraints of the Arduino microcontroller! The microcontroller can be purchased here: https://www.adafruit.com/product/4323
+`Teensy 4.0`:  The Explicit Complementary Filter code is uploaded onto this microcontroller. The Teensy 4.0 was used to take advantage of 32 bit ARM Cortex-M7, which provides a significantly faster/more powerful processor than the Arduino microcontrollers. This allowed for fast matrix math when using Eigen without having to worry about the 8-bit constraints of the Arduino microcontroller! The microcontroller can be purchased here: https://www.adafruit.com/product/4323
 
 #### Wiring it up!
 
@@ -36,7 +36,7 @@ To get the very best results, the sensors need to be first calibrated to ensure 
 
 `Accelerometer Calibration`: The accelerometer did not need to be calibrated for this project as the sensor itself gave quite 'clean' values already. However, we could potentially improve the orientation estimation by looking into calibrating the accelerometer as well.
 
-`Gyroscope Calibration`: Gyroscopes needed to be calibrated since they have some zero-offset (this is due to how it was manufactured) that could affect the results of the orientation estimation in UKF. Luckily, Adafruit provides a python jupyter notebook that calculates these gyroscope offsets provided by this link: https://learn.adafruit.com/adafruit-sensorlab-gyroscope-calibration/gyro-calibration-with-jupyter. After running the gyroscope calibration procedure, the offsets were then placed into global variables of the main Arduino script (attitude_estimation.ino) in the variables;
+`Gyroscope Calibration`: Gyroscopes needed to be calibrated since they have some zero-offset (this is due to how it was manufactured) that could affect the results of the orientation estimation in ECF. Luckily, Adafruit provides a python jupyter notebook that calculates these gyroscope offsets provided by this link: https://learn.adafruit.com/adafruit-sensorlab-gyroscope-calibration/gyro-calibration-with-jupyter. After running the gyroscope calibration procedure, the offsets were then placed into global variables of the main Arduino script (attitude_estimation.ino) in the variables;
 
 ```C++
 const float gyro_offset_x = 0.06285;
